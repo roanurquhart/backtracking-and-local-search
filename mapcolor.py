@@ -1,4 +1,5 @@
 import sys
+import utilityfuncs
 
 with open(sys.argv[1], "r") as ausfile:
     data = ausfile.readlines()
@@ -9,6 +10,15 @@ class State:
     def __init__(self, name):
         self.name = name
         self.adjacentStates = []
+
+    def __repr__(self):
+        return "<State name:%s adjacentStates:%s>" % (self.name, self.adjacentStates)
+
+    def __str__(self):
+        return "Test: name:%s, adjacentStates:%s" % (self.name, self.adjacentStates)
+
+    def get_name(self):
+        return self.name
 
 
 inputIncrement = 0
@@ -32,15 +42,21 @@ while inputIncrement < 3:
         else:
             counter += 1
             inputIncrement += 1
-            print(states)
     while inputIncrement == 2:
         if counter < len(data):
-            connection = State(data[counter].split())
-            states[connection[0]].adjacentStates.append(connection[1])
+            connection = data[counter].split()
+            stateOne = states[connection[0]]
+            stateTwo = states[connection[1]]
+            stateOne.adjacentStates.append(stateTwo)
+            stateTwo.adjacentStates.append(stateOne)
             counter += 1
         else:
             counter += 1
             inputIncrement += 1
+
+utilityfuncs.print_connections((states.values()))
+
+
 
 
 
