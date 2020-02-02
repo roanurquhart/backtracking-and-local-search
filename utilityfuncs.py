@@ -1,6 +1,8 @@
+import random
 
 colors = []
 states = {}
+
 
 class State:
     def __init__(self, name):
@@ -50,11 +52,19 @@ def parse_input(data):
                 input_increment += 1
 
 
-def print_connections(states):
-    for location in states:
-        print(location.name)
-        a = location.adjacentStates
+def backtrack_search():
+    # Put in some optimization discussed in class
+
+    # Right now this just gets a random state from the list and starts the search
+    random_state = random.sample(list(states.values()), 1)
+    print(random_state[0].get_name())
+
+
+def print_connections(locations):
+    for location in locations:
+        print(location.get_name())
+        adjacent_locations = location.adjacentStates
         print('{', end='')
-        for loc in a:
+        for loc in adjacent_locations:
             print(loc.get_name() + ',', end='')
         print('}')
