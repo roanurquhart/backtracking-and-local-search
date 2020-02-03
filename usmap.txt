@@ -3,36 +3,38 @@ Green
 Blue
 Yellow
 
+AL
 AK
 AZ
-AR
 CA
 CO
 CT
 DE
 FL
 GA
+IA
 ID
 IL
 IN
-IA
 KS
 KY
 LA
-ME
-MD
 MA
+MD
+ME
 MI
 MN
-MS
 MO
+MS
 MT
-NE
-NV
-NH
-NJ
 NC
 ND
+NE
+NH
+NJ
+NM
+NV
+NY
 OH
 OK
 OR
@@ -41,13 +43,13 @@ RI
 SC
 SD
 TN
-TZ
+TX
 UT
-VT
 VA
+VT
 WA
-WV
 WI
+WV
 WY
 
 ME NH
@@ -128,9 +130,9 @@ OK NM
 OK CO
 KS NE
 KS CO
-NB CO
-NB WY
-NB SD
+NE CO
+NE WY
+NE SD
 SD WY
 SD MT
 SD ND
