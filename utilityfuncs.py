@@ -84,6 +84,8 @@ def backtrack_search():
     random_state = random_state[0]
     if color_states(random_state):
         for state in states.values():
+            if state.get_color() == 'none':
+                color_states(state)
             print(state.get_name() + ' - ' + state.get_color())
     else:
         print('A solution was not found')
@@ -93,6 +95,9 @@ def backtrack_search():
 def color_states(state):
     child_index = 0
     visited[state.get_name()] = state
+    if len(state.adjacentStates) == 0:
+        state.set_color(state.get_available_colors()[0])
+        return True
     if check_neighbor_colors(state):
         while child_index < len(state.adjacentStates):
             state.set_color(state.get_available_colors()[0])
