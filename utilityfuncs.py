@@ -114,16 +114,26 @@ def color_states(state):
                 child_index += 1
                 if child_index >= len(state.adjacentStates):
                     return True
+
             next_state = state.adjacentStates[child_index]
+
+            # Recursive call on next state in the adjacency list
+            # If the call returns true, then we know color was successfully assigned
+            # and we can proceed to next adjacent state
             if color_states(next_state):
                 child_index += 1
             else:
+                # Eliminate the color that did not work if possible
                 if len(state.colors_available) > 1:
                     state.colors_available.pop(0)
                 else:
+                    if state.get_name() in visited:
+                        del visited[state.get_name()]
                     return False
         return True
     else:
+        if state.get_name() in visited:
+            del visited[state.get_name()]
         return False
 
 
@@ -141,6 +151,8 @@ def check_neighbor_colors(state):
             except:
                 pass
 
+    # If there are still valid colors, assign and return true
+    # else reset color list and return false
     if len(available_colors) > 0:
         state.colors_available = available_colors
         return True
@@ -158,6 +170,8 @@ def states_without_color(state_list):
 
     return counter
 
+
+# Checks each state for violation of rule
 def no_violation(state):
     state_color = state.get_color()
     for ste in state.adjacentStates:
@@ -169,9 +183,9 @@ def no_violation(state):
 
 def print_connections(locations):
     for location in locations:
-        print(location.get_name())
+        print(location.get_name() + ': ' + location.get_color())
         adjacent_locations = location.adjacentStates
         print('{', end='')
         for loc in adjacent_locations:
-            print(loc.get_name() + ',', end='')
+            print(loc.get_name() + ': ' + loc.get_color() + ',', end='')
         print('}')
