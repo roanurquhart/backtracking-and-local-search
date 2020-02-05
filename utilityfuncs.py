@@ -5,6 +5,8 @@ colors = []
 states = {}
 mrv_heap = []
 visited = {}
+backtracking_count = 0
+
 
 class State:
     def __init__(self, name):
@@ -84,23 +86,30 @@ def backtrack_search():
     random_state = random_state[0]
     if color_states(random_state):
         for state in states.values():
-            if state.get_color() == 'none':
-                color_states(state)
             print(state.get_name() + ' - ' + state.get_color())
+            no_violation(state)
+        print('Nodes searched: ' + str(backtracking_count))
     else:
         print('A solution was not found')
 
 
-# Basic recursively defined backtrack search
+# Recursively defined backtrack search
 def color_states(state):
+    global backtracking_count
+    backtracking_count += 1
     child_index = 0
     visited[state.get_name()] = state
+
+    # Island case
     if len(state.adjacentStates) == 0:
         state.set_color(state.get_available_colors()[0])
         return True
+
     if check_neighbor_colors(state):
+        # While the node still has unvisited adjacent states
         while child_index < len(state.adjacentStates):
             state.set_color(state.get_available_colors()[0])
+            # In case some adjacent states have already been visited
             while state.adjacentStates[child_index].get_name() in visited:
                 child_index += 1
                 if child_index >= len(state.adjacentStates):
@@ -148,6 +157,14 @@ def states_without_color(state_list):
             counter += 1
 
     return counter
+
+def no_violation(state):
+    state_color = state.get_color()
+    for ste in state.adjacentStates:
+        if state_color == ste.get_color():
+            print('breaks')
+            return
+    return
 
 
 def print_connections(locations):
