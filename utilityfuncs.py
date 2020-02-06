@@ -70,12 +70,7 @@ def parse_input(data):
 def init_heap():
     for st in states.values():
         conns = len(st.get_available_colors())
-        #conns = len(st.adjacentStates)
         heapq.heappush(mrv_heap, (conns, st.get_name()))
-
-    while len(mrv_heap) != 0:
-        ste = heapq.heappop(mrv_heap)
-        print(ste[1] + ' ' + str(ste[0]))
 
 
 def backtrack_search():
