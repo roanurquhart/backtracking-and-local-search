@@ -2,7 +2,6 @@ import heapq
 
 colors = []
 states = {}
-mrv_heap = []
 
 
 class State:
@@ -64,36 +63,6 @@ def parse_input(data):
                 input_increment += 1
 
 
-def init_heap():
-    for st in states.values():
-        conns = len(st.get_available_colors())
-        heapq.heappush(mrv_heap, (conns, st.get_name()))
-
-
-# Checks the colors already being used by neighboring states
-# Returns True if colors are still available and sets state's available colors
-# Returns False if there are no colors available
-def check_neighbor_colors(state):
-    available_colors = list(colors)
-    adjacent_states = state.adjacentStates
-
-    for adj in adjacent_states:
-        if adj.get_color() != 'none':
-            try:
-                available_colors.remove(adj.get_color())
-            except:
-                pass
-
-    # If there are still valid colors, assign and return true
-    # else reset color list and return false
-    if len(available_colors) > 0:
-        state.colors_available = available_colors
-        return True
-    else:
-        state.colors_available = list(colors)
-        return False
-
-
 # Counts the connected states that have not been assigned colors
 def states_without_color(state_list):
     counter = 0
@@ -104,7 +73,7 @@ def states_without_color(state_list):
     return counter
 
 
-# Checks each state for violation of rule
+# Checks a state for violation of rule
 def no_violation(state):
     state_color = state.get_color()
     for ste in state.adjacentStates:
@@ -113,7 +82,9 @@ def no_violation(state):
             return
     return
 
-
+# Prints each state with its color
+# then below it prints all connected states with
+# their assigned colors in brackets
 def print_connections(locations):
     for location in locations:
         print(location.get_name() + ': ' + location.get_color())
