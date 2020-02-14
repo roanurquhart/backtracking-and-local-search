@@ -10,6 +10,7 @@ class State:
         self.adjacentStates = []
         self.color = 'none'
         self.colors_available = list(colors)
+        self.violations = 0
 
     def __repr__(self):
         return "<State name:%s adjacentStates:%s>" % (self.name, self.adjacentStates)

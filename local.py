@@ -20,51 +20,49 @@ def local_search():
     # Variable Init
     global changes_made
     global num_violations
-    timeout = time.time() + 15
-    repeater = ''
+    global violations_list
+    timeout = time.time() + 5
     count = 0
 
     print("Local Search:")
-    print(violations_heap[0])
+    print(num_violations)
 
-    while len(violations_heap) != 0:
-        # Get the next state off of the modified max heap
-        state_tuple = heapq.heappop(violations_heap)
-        state = lcl_states[state_tuple[1]]
+    while num_violations > 0:
+        # Timeout condition
+        if time.time() > timeout:
+            break
 
-        # To stop a state from causing an infinite loop
-        if repeater == state:
+        # Get the next state from the violation list
+        state = violations_list[0]
+        if count_violations(state) == 0:
+            violations_list.pop(0)
+            violations_list.append(state)
             count += 1
-            if count > 10:
+            if count > 100:
+                utilityfuncs.print_connections(lcl_states.values())
                 break
-        else:
-            count = 0
-        repeater = state
-        print(state_tuple)
+            continue
+        count = 0
+        viols = state.violations
+        violations_list.pop(0)
 
         # Assigns color to resolve existing violations
         # May create different violations
         resolve_violations(state)
-        violations_remain = count_violations(state)
-        print(violations_remain)
 
-        # Keeps track of total violations
-        # Note: Numbers are negative in heap
-        num_violations += violations_remain + state_tuple[0]
-        if violations_remain != 0:
-            heapq.heappush(violations_heap, ((-1 * violations_remain), state.get_name()))
-        if time.time() > timeout:
-            break
-        count += 1
-    if len(violations_heap) != 0:
-        print(len(violations_heap))
+        violations_list.append(state)
+
+    if num_violations > 0:
+        print(num_violations)
+        for ste in lcl_states.values():
+            print(ste.get_name() + ": " + str(ste.violations))
         print('The Local Search Timed Out - No Solution Was Found')
     else:
         for ste in lcl_states.values():
             print(ste.get_name() + ' - ' + ste.get_color())
             # Confirms there are no states that violate the rule
             utilityfuncs.no_violation(ste)
-        utilityfuncs.print_connections(lcl_states.values())
+        #utilityfuncs.print_connections(lcl_states.values())
         print('Changes made: ' + str(changes_made))
 
 
@@ -80,6 +78,7 @@ def rand_assign():
 def resolve_violations(state):
     # Variable Initialization
     global changes_made
+    global num_violations
     adj_color_count = {"Red": 0, "Blue": 0, "Green": 0, "Yellow": 0}
     available_colors = list(utilityfuncs.colors)
 
@@ -96,6 +95,8 @@ def resolve_violations(state):
     # If colors are available, assign
     if len(available_colors) != 0:
         state.set_color(available_colors[0])
+        num_violations -= state.violations * 2
+        state.violations = 0
         changes_made += 1
     else:
         # Set the color to the least used color in order
@@ -106,6 +107,8 @@ def resolve_violations(state):
             if adj_color_count[color] < minimum:
                 minimum = adj_color_count[color]
                 min_color = color
+        num_violations -= (state.violations * 2) - (minimum * 2)
+        state.violations = minimum
         state.set_color(min_color)
         changes_made += 1
 
@@ -126,7 +129,7 @@ def simplify_copy_heap():
     global violations_list
     while len(violations_heap) > 0:
         state = heapq.heappop(violations_heap)
-        violations_list.append(state)
+        violations_list.append(lcl_states[state[1]])
 
 
 # Prints the violations heap, but depopulates
@@ -144,6 +147,7 @@ def count_violations(state):
         if state.get_color() == ste.get_color():
             count += 1
 
+    state.violations = count
     return count
 
 
