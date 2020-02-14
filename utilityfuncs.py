@@ -82,6 +82,7 @@ def no_violation(state):
             return
     return
 
+
 # Prints each state with its color
 # then below it prints all connected states with
 # their assigned colors in brackets
