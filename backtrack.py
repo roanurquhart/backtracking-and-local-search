@@ -31,8 +31,7 @@ def backtrack_search():
 
 # Recursively defined backtrack search
 def color_states(state):
-    global backtracking_count
-    backtracking_count += 1
+    increment_count()
     child_index = 0
 
     # Add state to visited dictionary
@@ -65,6 +64,7 @@ def color_states(state):
             if color_states(next_state):
                 child_index += 1
             else:
+                increment_count()
                 # Eliminate the color that did not work if possible
                 if len(state.colors_available) > 1:
                     state.colors_available.pop(0)
@@ -101,6 +101,11 @@ def check_neighbor_colors(state):
     else:
         state.colors_available = list(utilityfuncs.colors)
         return False
+
+
+def increment_count():
+    global backtracking_count
+    backtracking_count += 1
 
 
 # Copies states dictionary into local version
