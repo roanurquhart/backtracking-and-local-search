@@ -5,6 +5,7 @@ import time
 
 violations_heap = []
 violations_list = []
+possible_colors = ['Red', 'Green', 'Blue', 'Yellow']
 lcl_states = {}
 num_violations = 0
 changes_made = 0
@@ -35,15 +36,11 @@ def local_search():
         # Get the next state from the violation list
         state = violations_list[0]
         if count_violations(state) == 0:
-            violations_list.pop(0)
-            violations_list.append(state)
-            count += 1
-            if count > 100:
-                utilityfuncs.print_connections(lcl_states.values())
-                break
-            continue
-        count = 0
-        viols = state.violations
+                violations_list.pop(0)
+                violations_list.append(state)
+                count += 1
+                continue
+
         violations_list.pop(0)
 
         # Assigns color to resolve existing violations
@@ -56,6 +53,7 @@ def local_search():
         print(num_violations)
         for ste in lcl_states.values():
             print(ste.get_name() + ": " + str(ste.violations))
+        print(changes_made)
         print('The Local Search Timed Out - No Solution Was Found')
     else:
         for ste in lcl_states.values():
@@ -75,7 +73,7 @@ def rand_assign():
 
 # Sets a color to the state based on the least used color in the
 # adjacent states
-def resolve_violations(state):
+def resolve_violations(loc):
     # Variable Initialization
     global changes_made
     global num_violations
@@ -85,7 +83,7 @@ def resolve_violations(state):
     # Counts the number of each color in surrounding states
     # and filters a list of colors, which if
     # assigned would cause no violation
-    for adj in state.adjacentStates:
+    for adj in loc.adjacentStates:
         try:
             adj_color_count[adj.get_color()] += 1
             available_colors.remove(adj.get_color())
@@ -94,9 +92,9 @@ def resolve_violations(state):
 
     # If colors are available, assign
     if len(available_colors) != 0:
-        state.set_color(available_colors[0])
-        num_violations -= state.violations * 2
-        state.violations = 0
+        loc.set_color(available_colors[0])
+        num_violations -= loc.violations * 2
+        loc.violations = 0
         changes_made += 1
     else:
         # Set the color to the least used color in order
@@ -107,9 +105,9 @@ def resolve_violations(state):
             if adj_color_count[color] < minimum:
                 minimum = adj_color_count[color]
                 min_color = color
-        num_violations -= (state.violations * 2) - (minimum * 2)
-        state.violations = minimum
-        state.set_color(min_color)
+        num_violations -= (loc.violations * 2) - (minimum * 2)
+        loc.violations = minimum
+        loc.set_color(min_color)
         changes_made += 1
 
 
