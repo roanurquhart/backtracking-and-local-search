@@ -26,20 +26,22 @@ def local_search():
     count = 0
 
     print("Local Search:")
-    print(num_violations)
 
+    # Runs until there are no longer any violations
     while num_violations > 0:
+
         # Timeout condition
         if time.time() > timeout:
             break
 
         # Get the next state from the violation list
+        # This list is sorted by state with the most violations, in descending order
         state = violations_list[0]
-        if count_violations(state) == 0:
-                violations_list.pop(0)
-                violations_list.append(state)
-                count += 1
-                continue
+        # if count_violations(state) == 0:
+        #         violations_list.pop(0)
+        #         violations_list.append(state)
+        #         count += 1
+        #         continue
 
         violations_list.pop(0)
 
@@ -80,6 +82,8 @@ def resolve_violations(loc):
     adj_color_count = {"Red": 0, "Blue": 0, "Green": 0, "Yellow": 0}
     available_colors = list(utilityfuncs.colors)
 
+    count_violations(loc)
+
     # Counts the number of each color in surrounding states
     # and filters a list of colors, which if
     # assigned would cause no violation
@@ -92,10 +96,14 @@ def resolve_violations(loc):
 
     # If colors are available, assign
     if len(available_colors) != 0:
-        loc.set_color(available_colors[0])
-        num_violations -= loc.violations * 2
-        loc.violations = 0
-        changes_made += 1
+        if len(available_colors) == 1 and available_colors[0] == loc.get_color():
+            return
+        else:
+            random_color = random.sample(available_colors, 1)
+            loc.set_color(random_color[0])
+            num_violations -= loc.violations * 2
+            loc.violations = 0
+            changes_made += 1
     else:
         # Set the color to the least used color in order
         # to fix the most violations
