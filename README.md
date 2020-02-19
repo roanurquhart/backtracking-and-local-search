@@ -11,7 +11,7 @@ In order to run this program you will need:<br>
 may work, so use other versions at your own risk)
 
 Next use this command in the shell / terminal to execute the python code<br>
-> python mapcolor.py usmap.txt<br>
+> python mapcolor.py usTestFile.txt <br>
 
 ### Backtracking Search
 The assignment of colors to the states and the number of nodes

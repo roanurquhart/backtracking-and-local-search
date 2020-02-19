@@ -31,6 +31,7 @@ class State:
         return self.colors_available
 
 
+# Parses input
 def parse_input(data):
     input_increment = 0
     counter = 0

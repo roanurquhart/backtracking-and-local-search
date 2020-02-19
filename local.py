@@ -11,7 +11,7 @@ num_violations = 0
 changes_made = 0
 
 
-# Still needs work to figure out how to solve
+# Performs local search
 def local_search():
     # Set up for search
     init_lcl_states()
@@ -22,12 +22,14 @@ def local_search():
     global changes_made
     global num_violations
     global violations_list
-    timeout = time.time() + 5
-    count = 0
 
+    # Timeout variable, currently set to 15 seconds
+    timeout = time.time() + 15
+
+    print()
     print("Local Search:")
 
-    # Runs until there are no longer any violations
+    # Runs until there are no longer any violations or timeout
     while num_violations > 0:
 
         # Timeout condition
@@ -37,11 +39,6 @@ def local_search():
         # Get the next state from the violation list
         # This list is sorted by state with the most violations, in descending order
         state = violations_list[0]
-        # if count_violations(state) == 0:
-        #         violations_list.pop(0)
-        #         violations_list.append(state)
-        #         count += 1
-        #         continue
 
         violations_list.pop(0)
 
@@ -51,18 +48,20 @@ def local_search():
 
         violations_list.append(state)
 
+    # If there was timeout
     if num_violations > 0:
-        print(num_violations)
-        for ste in lcl_states.values():
-            print(ste.get_name() + ": " + str(ste.violations))
-        print(changes_made)
+
         print('The Local Search Timed Out - No Solution Was Found')
+
+    # Else a solution was found
     else:
+
         for ste in lcl_states.values():
+
             print(ste.get_name() + ' - ' + ste.get_color())
             # Confirms there are no states that violate the rule
             utilityfuncs.no_violation(ste)
-        #utilityfuncs.print_connections(lcl_states.values())
+
         print('Changes made: ' + str(changes_made))
 
 
@@ -75,6 +74,8 @@ def rand_assign():
 
 # Sets a color to the state based on the least used color in the
 # adjacent states
+# Also makes changes to the num_violations (total number of violations) variable
+# Updates the number of violations the loc variable has
 def resolve_violations(loc):
     # Variable Initialization
     global changes_made
@@ -101,6 +102,8 @@ def resolve_violations(loc):
         else:
             random_color = random.sample(available_colors, 1)
             loc.set_color(random_color[0])
+
+            # Decrement accounts for violations counted by other states as well
             num_violations -= loc.violations * 2
             loc.violations = 0
             changes_made += 1
@@ -109,10 +112,13 @@ def resolve_violations(loc):
         # to fix the most violations
         minimum = 1000000
         min_color = ''
+
         for color in adj_color_count.keys():
             if adj_color_count[color] < minimum:
                 minimum = adj_color_count[color]
                 min_color = color
+
+        # Decrement accounts for violations counted by other states as well
         num_violations -= (loc.violations * 2) - (minimum * 2)
         loc.violations = minimum
         loc.set_color(min_color)
@@ -127,6 +133,8 @@ def init_heap():
         # Negate values in order to create max heap, need to abs value values later
         heapq.heappush(violations_heap, ((-1 * violations), state.get_name()))
         num_violations += violations
+
+    # Creates an ordered list which is used in the local search
     simplify_copy_heap()
 
 
