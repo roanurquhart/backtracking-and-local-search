@@ -6,7 +6,7 @@ In order to run this program you will need:<br>
   - utilityfuncs.py
   - backtrack.py
   - local.py
-  - usmap.txt
+  - usTestFile.txt
 - Python 3.7 installed (I used this for my dev environment, other versions
 may work, so use other versions at your own risk)
 
@@ -20,5 +20,5 @@ searched will display in the console
 ### Local Search
 If search completes successfully, the assignment of colors to
 the states and the number of changes made will be printed to the
-console. If not solution is found, a node that the search could 
+console. If no solution is found, a note that the search could 
 not complete will be printed to the console
